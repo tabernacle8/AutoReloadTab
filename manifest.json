@@ -1,16 +1,15 @@
-  {
-    "name": "Auto Tab Reload",
-    "version": "1.0",
-    "options_page": "options.html",
-    "description": "Reloads the tab.. thats it",
-    "permissions": ["declarativeContent", "storage"],
-    "background": {
-      "permissions": ["activeTab", "declarativeContent", "storage"],
-      "persistent": false,
-      "scripts": ["background.js"] 
-    },
-    "page_action": {
-      "default_popup": "popup.html"
-    },
-    "manifest_version": 2
-  }
+{
+  "name": "Getting Started Example",
+  "version": "1.0",
+  "options_page": "options.html",
+  "description": "Build an Extension!",
+  "permissions": ["activeTab", "declarativeContent", "storage"],
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": false
+  },
+  "page_action": {
+    "default_popup": "popup.html"
+  },
+  "manifest_version": 2
+}
