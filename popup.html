@@ -1,16 +1,40 @@
 <!DOCTYPE html>
 <html>
-  <head>
+
+<head>
     <style>
-      button {
-        height: 30px;
-        width: 30px;
-        outline: none;
-      }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 5px 20px;
+            text-align: center;
+            display: inline-block;
+            font-size: 16px;
+            margin: 2px 2px;
+        }
     </style>
-  </head>
-  <body>
-    <button id="changeColor"></button>
+</head>
+
+<body style="background-color:powderblue;">
+    <P style="white-space: nowrap; text-align: center"><b>Welcome to Simple Auto Reload :)</b></P>
+    <br>
+    <p style="white-space: nowrap; text-align: center"></p>
+    <br>
+
+    <form action="">
+        <label id="userTimeTextbox" for="userTimeTextbox" style="font-size: 13px;">Refresh interval (In
+            seconds):</label>
+        <input type="text" id="fname" name="fname" style="padding: 5px 5px;font-size: 13px;" placeholder="10">
+    </form>
+
+
+    <br><br>
+    <button id="startReload">Start</button>
+    <button id="stopReload">Stop</button>
+
+
+
     <script src="popup.js"></script>
-  </body>
+</body>
+
 </html>
