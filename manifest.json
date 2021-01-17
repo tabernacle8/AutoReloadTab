@@ -2,7 +2,7 @@
     "name": "Auto Tab Reload",
     "version": "1.0",
     "description": "Reloads the tab.. thats it",
-    "permissions": ["storage"],
+    "permissions": ["declarativeContent", "storage"],
     "background": {
       "scripts": ["background.js"],
       "persistent": false
