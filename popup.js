@@ -12,4 +12,15 @@ changeColor.onclick = function(element) {
           tabs[0].id,
           {code: 'document.body.style.backgroundColor = "' + color + '";'});
     });
+
+    setTimeout(function (){ 
+        
+    }, 3000);
+    
   };
+
+  function reloadTab(){
+    chrome.tabs.getSelected(null, function(tab) {
+        chrome.tabs.reload(tab.id);
+    });
+  }
