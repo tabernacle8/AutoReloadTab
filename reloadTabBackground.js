@@ -38,13 +38,18 @@ function beginReloading() {
                        chrome.tabs.reload(tabId);
 
                     //Just prevent garbarge data from getting in
-                    if (reloadTime == -1) {
-                        return;
+                    if (reloadTime == -1 || reloadTime ==0) {
+                        refreshData()
                     }
-
+                    else{
                     //Go back to the start of this function, and we will wait the number of seconds before reloading again
                     setTimeout(refreshData, parseInt(reloadTime) * 1000);
+                    }
                 })
+            }
+            else{
+                //Restart loop
+                refreshData()
             }
         });
     });
@@ -52,10 +57,11 @@ function beginReloading() {
 
 //Checks to see if we need to start reloading the tab
 function refreshData() {
-
+    //console.log("listening for data")
     //Get refreshing true or false data
     chrome.storage.sync.get(['refreshing'], function (result) {
         for (let data of Object.keys(result)) {
+            //console.log(result)
             if (result[data] == 1) {
                 //Let's start refreshing!
                 beginReloading()
