@@ -7,6 +7,8 @@ https://github.com/tabernacle8/AutoReloadTab
 
 */
 
+//Get functions that will handle background work (Such as reloading the tabs)
+//import { beginReloading } from 'reloadTabBackground.js';
 
 //Init some button values
 let startReload = document.getElementById('startReload');
@@ -15,6 +17,7 @@ let userTimeTextbox = document.getElementById('reloadTimer');
 
 
 //Function to refresh the tab
+//This function is no longer in use! reloadTabBackground is taking care of this
 function refreshData() {
     var reloadTime = 0
     var refreshValue = "0"
@@ -101,17 +104,16 @@ startReload.onclick = function (element) {
     }, function () {
         console.log('Reloading set to 1');
 
-        //Get the current tab and store its windowID
+        //Get the current tab and store its id
         chrome.tabs.getSelected(null, function (tab) {
             console.log(tab)
-            reloadTabID = tab.windowId
+            reloadTabID = tab.id
             chrome.storage.sync.set({
                 "tabid": reloadTabID
             }, function () {
                 console.log('TabID cached as' + reloadTabID);
 
-                //Begin refresh cycle by calling this function
-                refreshData();
+                //We are done! reloadTabBackground.js will handle the rest
             });
         });
     });

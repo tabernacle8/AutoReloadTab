@@ -1,10 +1,10 @@
 {
   "name": "Simple Tab Reloader",
   "version": "1.0.0",
-  "description": "A chrome extensions made with <3 from Tabernacle8, its simple and stores no user data except locally on your browser",
+  "description": "Refresh your tabs, without all those annoying features",
   "permissions": ["activeTab", "declarativeContent", "storage"],
   "background": {
-    "scripts": ["background.js"],
+    "scripts": ["background.js", "reloadTabBackground.js"],
     "persistent": false
   },
   "page_action": {
