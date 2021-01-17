@@ -49,6 +49,7 @@ function beginReloading() {
             }
             else{
                 //Restart loop
+                //console.log("refresh reload cycle")
                 refreshData()
             }
         });
@@ -57,6 +58,7 @@ function beginReloading() {
 
 //Checks to see if we need to start reloading the tab
 function refreshData() {
+    //console.log("refresh")
     //console.log("listening for data")
     //Get refreshing true or false data
     chrome.storage.sync.get(['refreshing'], function (result) {
@@ -67,6 +69,7 @@ function refreshData() {
                 beginReloading()
             } else {
                 //Do not refresh or stop refreshing!
+                //console.log("restart reload cycle!")
                 setTimeout(refreshData, 1000);
             }
 
