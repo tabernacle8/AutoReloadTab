@@ -9,6 +9,16 @@ chrome.runtime.onInstalled.addListener(function () {
     }, function () {
         //null
     });
+    chrome.storage.sync.set({
+        refreshing: '0'
+    }, function () {
+        //null
+    });
+    chrome.storage.sync.set({
+        tabid: '0'
+    }, function () {
+        //null
+    });
 });
 
 chrome.runtime.onInstalled.addListener(function () {
