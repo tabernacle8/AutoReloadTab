@@ -6,23 +6,31 @@ function refreshData() {
     console.log("Hey im the tab reloader...")
     var reloadTime = 0
     var refreshValue = "0"
+    var tabId = ""
     chrome.storage.sync.get(['reloadSeconds'], function (result) {
-        reloadTime = result
         for (let data of Object.keys(result)) {
-             reloadTime = result[data];
+            reloadTime = result[data];
         }
         chrome.storage.sync.get(['refreshing'], function (result) {
             for (let data of Object.keys(result)) {
-                 refreshValue = result[data];
+                refreshValue = result[data];
             }
 
-            console.log(reloadTime)
-            console.log(refreshValue)
             if (refreshValue == "1") {
-                chrome.tabs.getSelected(null, function (tab) {
-                    chrome.tabs.reload(tab.id);
-                });
-                setTimeout(refreshData, parseInt(reloadTime) * 1000);
+                chrome.storage.sync.get(['tabid'], function (result) {
+                    for (let data of Object.keys(result)) {
+                        tabId = result[data];
+                    }
+                    console.log("tabid: " + tabId)
+                    chrome.tabs.getSelected(tabId, function (tab) {
+                        chrome.tabs.reload(tab.id);
+                    });
+                    if(reloadTime==-1){
+                        return;
+                    }
+                    setTimeout(refreshData, parseInt(reloadTime) * 1000);
+                })
+
             }
 
         });
@@ -57,21 +65,19 @@ stopReload.onclick = function (element) {
 
 startReload.onclick = function (element) {
     var reloadTabID = ""
-
     chrome.storage.sync.set({
         "refreshing": "1"
     }, function () {
         console.log('Reloading set to 1');
-
         chrome.tabs.getSelected(null, function (tab) {
-            reloadTabID = tab.id
-        });
-
-        chrome.storage.sync.set({
-            "tabid": reloadTabID
-        }, function () {
-            console.log('TabID cached as' + reloadTabID);
-            refreshData();
+            console.log(tab)
+            reloadTabID = tab.windowId
+            chrome.storage.sync.set({
+                "tabid": reloadTabID
+            }, function () {
+                console.log('TabID cached as' + reloadTabID);
+                refreshData();
+            });
         });
     });
 }
