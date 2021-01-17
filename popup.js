@@ -1,8 +1,8 @@
 /*
 
-Made with <3 by Tabernacle8 just for you!
+Made with <3 by Tabernacle8
 
-This project is open source! :)
+This project is on github! :)
 https://github.com/tabernacle8/AutoReloadTab
 
 */
