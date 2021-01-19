@@ -21,6 +21,7 @@ console.log("Oh hey there. I'm ready to reload some tabs!")
 
 
 //Listen for user input on the UI
+
 userTimeTextbox.addEventListener("change", function (data) {
     var newReloadTime = userTimeTextbox.value
 
@@ -37,6 +38,7 @@ userTimeTextbox.addEventListener("change", function (data) {
         //do nothing
     })
 })
+
 
 //Executes when user clicks "stop"
 stopReload.onclick = function (element) {
