@@ -12,17 +12,12 @@ https://github.com/tabernacle8/AutoReloadTab
 
 //First time setup, establish some data for variables
 /*
-color: Depreciated, no longer used
+nextReload: Time until the page reloads
 reloadSeconds: Time in seconds between each reload
 refreshing: 0 if not refreshing, 1 if refreshing
 tabid: id of tab to refresh
 */
 chrome.runtime.onInstalled.addListener(function () {
-    chrome.storage.sync.set({
-        color: '#3aa757'
-    }, function () {
-        console.log("The color is green.");
-    });
     chrome.storage.sync.set({
         reloadSeconds: '10'
     }, function () {
@@ -45,8 +40,9 @@ chrome.runtime.onInstalled.addListener(function () {
     });
 });
 
-//Once installed, start listening for tabs and include an optional whitelist
-//Maybe will use this later, just a placeceholder for now
+
+//Maybe will use this later, this code does not run
+/*
 chrome.runtime.onInstalled.addListener(function () {
     chrome.storage.sync.set({
         color: '#3aa757'
@@ -65,3 +61,4 @@ chrome.runtime.onInstalled.addListener(function () {
         }]);
     });
 });
+*/
