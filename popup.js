@@ -63,7 +63,6 @@ startReload.onclick = function (element) {
 
         //Get the current tab and store its id
         chrome.tabs.getSelected(null, function (tab) {
-            console.log(tab)
             reloadTabID = tab.id
             chrome.storage.sync.set({
                 "tabid": reloadTabID
