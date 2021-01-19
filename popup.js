@@ -16,55 +16,6 @@ let stopReload = document.getElementById('stopReload');
 let userTimeTextbox = document.getElementById('reloadTimer');
 
 
-//Function to refresh the tab
-//This function is no longer in use! reloadTabBackground is taking care of this
-function refreshData() {
-    var reloadTime = 0
-    var refreshValue = "0"
-    var tabId = ""
-
-    //Get how many seconds until next reload
-    chrome.storage.sync.get(['reloadSeconds'], function (result) {
-        for (let data of Object.keys(result)) {
-            reloadTime = result[data];
-        }
-
-        //Check to make sure we are still refreshing
-        chrome.storage.sync.get(['refreshing'], function (result) {
-            for (let data of Object.keys(result)) {
-                refreshValue = result[data];
-            }
-
-            //If we are refreshing, do the following
-            if (refreshValue == "1") {
-
-                //Get the ID of the tab that must be reloaded
-                chrome.storage.sync.get(['tabid'], function (result) {
-                    for (let data of Object.keys(result)) {
-                        tabId = result[data];
-                    }
-
-                    //Ask chrome for that tab object (from the ID we just got), and reload it
-                    chrome.tabs.getSelected(tabId, function (tab) {
-                        chrome.tabs.reload(tab.id);
-                    });
-
-                    //Just prevent garbarge data from getting in
-                    if(reloadTime==-1){
-                        return;
-                    }
-
-                    //Go back to the start of this function, and we will wait the number of seconds before reloading again
-                    setTimeout(refreshData, parseInt(reloadTime) * 1000);
-                })
-
-            }
-
-        });
-    });
-}
-
-
 //Init function, first ran when the script boots
 console.log("Oh hey there. I'm ready to reload some tabs!")
 
@@ -79,8 +30,6 @@ userTimeTextbox.addEventListener("change", function (data) {
     }, function () {
         console.log('Reload time is set to ' + newReloadTime);
     });
-
-
 })
 
 //Executes when user clicks "stop"
