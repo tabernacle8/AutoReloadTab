@@ -38,6 +38,11 @@ chrome.runtime.onInstalled.addListener(function () {
     }, function () {
         //null
     });
+    chrome.storage.sync.set({
+        nextReload: '0'
+    }, function () {
+        //null
+    });
 });
 
 //Once installed, start listening for tabs and include an optional whitelist

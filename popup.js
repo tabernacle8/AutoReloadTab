@@ -30,6 +30,12 @@ userTimeTextbox.addEventListener("change", function (data) {
     }, function () {
         console.log('Reload time is set to ' + newReloadTime);
     });
+    chrome.storage.sync.set({
+        "nextReload": `${newReloadTime}`
+    }, function () {
+        console.log("next reload set to "+newReloadTime)
+        //do nothing
+    })
 })
 
 //Executes when user clicks "stop"

@@ -12,6 +12,7 @@ function beginReloading() {
     var reloadTime = 0
     var refreshValue = "0"
     var tabId = ""
+    var nextReload = "0"
 
     //Get how many seconds until next reload
     chrome.storage.sync.get(['reloadSeconds'], function (result) {
@@ -28,26 +29,53 @@ function beginReloading() {
             //If we are refreshing, do the following
             if (refreshValue == "1") {
 
-                //Get the ID of the tab that must be reloaded
-                chrome.storage.sync.get(['tabid'], function (result) {
+
+                //Check if it's time to reload 
+
+                chrome.storage.sync.get(['nextReload'], function (result) {
                     for (let data of Object.keys(result)) {
-                        tabId = result[data];
+                        nextReload = result[data];
+                        console.log("next reload:" + nextReload)
                     }
 
-                    //Reload the tab we want, from memory
-                       chrome.tabs.reload(tabId);
+                    //If it's time to reload, then do it!
+                    if (parseInt(nextReload) <= 0) {
+                        //Get the ID of the tab that must be reloaded
+                        chrome.storage.sync.get(['tabid'], function (result) {
+                            for (let data of Object.keys(result)) {
+                                tabId = result[data];
+                            }
 
-                    //Just prevent garbarge data from getting in
-                    if (reloadTime == -1 || reloadTime ==0) {
-                        refreshData()
+                            //Reload the tab we want, from memory
+                            chrome.tabs.reload(tabId);
+
+                            //Just prevent garbarge data from getting in
+                            if (reloadTime == -1 || reloadTime == 0) {
+                                refreshData()
+                            } else {
+                                //Go back to the start of this function, and we will wait the number of seconds before reloading again
+                                chrome.storage.sync.set({
+                                    "nextReload": `${reloadTime}`
+                                }, function () {
+                                    //Restart the loop
+                                    setTimeout(refreshData, 1000);
+                                })
+                            }
+                        })
                     }
-                    else{
-                    //Go back to the start of this function, and we will wait the number of seconds before reloading again
-                    setTimeout(refreshData, parseInt(reloadTime) * 1000);
+                    //It's not time to reload:
+                    else {
+                        console.log("Not time to reload yet")
+                        chrome.storage.sync.set({
+                            "nextReload": `${(nextReload-1)}`
+                        }, function () {
+                            //Restart the loop
+                            setTimeout(refreshData, 1000);
+                        })
                     }
                 })
-            }
-            else{
+                
+            } else {
                 //Restart loop
                 //console.log("refresh reload cycle")
                 refreshData()

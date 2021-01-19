@@ -12,17 +12,25 @@
             font-size: 16px;
             margin: 2px 2px;
         }
-        button:hover {     
-            background-color:#5fd464;    
-            }
+
+        button:hover {
+            background-color: #5fd464;
+        }
     </style>
 </head>
 
+
+
 <body style="background-color:powderblue;">
     <p style="white-space: nowrap; text-align: center"><b>Welcome to Simple Tab Reloader :)</b></p>
+
     <p style="white-space: nowrap; text-align: center">Made with &lt;3 by Tabernacle8</p>
 
     <br>
+
+    <p>Next reload is in <span id='nextReload'>0</span> seconds</p>
+    <script src="popupHelper.js"></script>
+
     <select name="reloadTime" id="reloadTimer" style="margin: 0 auto;text-align:center">
         <option value="-1">Select Time</option>
         <option value="1">1 second</option>
@@ -37,7 +45,7 @@
     <br><br>
     <button id="startReload">Start</button>
     <button id="stopReload" style="float: right;">Stop</button>
-    
+
 
 
     <script src="popup.js"></script>
