@@ -38,12 +38,12 @@ chrome.runtime.onInstalled.addListener(function () {
     }, function () {
         //null
     });
-    console.log("setup complete")
+    console.log("Thanks for installing! First time setup is complete")
 });
 
 
 //Establish extention for all tabs
-
+//Runs only on first time setup
 chrome.runtime.onInstalled.addListener(function () {
     chrome.declarativeContent.onPageChanged.removeRules(undefined, function () {
         chrome.declarativeContent.onPageChanged.addRules([{
@@ -56,4 +56,5 @@ chrome.runtime.onInstalled.addListener(function () {
             actions: [new chrome.declarativeContent.ShowPageAction()]
         }]);
     });
+    console.log("Hook with whitelist is done")
 });

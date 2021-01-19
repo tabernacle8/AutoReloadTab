@@ -35,7 +35,7 @@ function beginReloading() {
                 chrome.storage.sync.get(['nextReload'], function (result) {
                     for (let data of Object.keys(result)) {
                         nextReload = result[data];
-                        console.log("next reload:" + nextReload)
+                        //console.log("next reload:" + nextReload)
                     }
 
                     //If it's time to reload, then do it!
@@ -65,7 +65,7 @@ function beginReloading() {
                     }
                     //It's not time to reload:
                     else {
-                        console.log("Not time to reload yet")
+                        //console.log("Not time to reload yet")
                         chrome.storage.sync.set({
                             "nextReload": `${(nextReload-1)}`
                         }, function () {
