@@ -34,7 +34,7 @@ chrome.runtime.onInstalled.addListener(function () {
         //null
     });
     chrome.storage.sync.set({
-        nextReload: '0'
+        nextReload: '10'
     }, function () {
         //null
     });

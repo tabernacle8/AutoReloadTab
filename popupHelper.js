@@ -9,6 +9,12 @@ function updateReloadTimer() {
             nextReload = result[data];
         }
 
+        if (nextReload == "-1") {
+            nextReload = "<b>Please select a reload time</b>"
+        } else {
+            nextReload = (`Next reload is in <b>${nextReload}</b> seconds`)
+        }
+
         nextReloadDisplayed.innerHTML = nextReload
         setTimeout(updateReloadTimer, 1000);
     })

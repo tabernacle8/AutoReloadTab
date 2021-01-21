@@ -74,7 +74,7 @@ function beginReloading() {
                         })
                     }
                 })
-                
+
             } else {
                 //Restart loop
                 //console.log("refresh reload cycle")
