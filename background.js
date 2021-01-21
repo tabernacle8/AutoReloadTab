@@ -24,6 +24,16 @@ chrome.runtime.onInstalled.addListener(function () {
         //null
     });
     chrome.storage.sync.set({
+        reloadMinutes: '0'
+    }, function () {
+        //null
+    });
+    chrome.storage.sync.set({
+        reloadHours: '0'
+    }, function () {
+        //null
+    });
+    chrome.storage.sync.set({
         refreshing: '0'
     }, function () {
         //null

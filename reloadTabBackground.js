@@ -13,74 +13,89 @@ function beginReloading() {
     var refreshValue = "0"
     var tabId = ""
     var nextReload = "0"
-
-    //Get how many seconds until next reload
+    var reloadSeconds = "0"
+    var reloadMinutes = "0"
+    var reloadHours = "0"
     chrome.storage.sync.get(['reloadSeconds'], function (result) {
         for (let data of Object.keys(result)) {
-            reloadTime = result[data];
+            reloadSeconds = result[data];
         }
 
-        //Check to make sure we are still refreshing
-        chrome.storage.sync.get(['refreshing'], function (result) {
+        chrome.storage.sync.get(['reloadMinutes'], function (result) {
             for (let data of Object.keys(result)) {
-                refreshValue = result[data];
+                reloadMinutes = result[data];
             }
 
-            //If we are refreshing, do the following
-            if (refreshValue == "1") {
+            chrome.storage.sync.get(['reloadHours'], function (result) {
+                for (let data of Object.keys(result)) {
+                    reloadHours = result[data];
+                }
 
-
-                //Check if it's time to reload 
-
-                chrome.storage.sync.get(['nextReload'], function (result) {
+                //Check to make sure we are still refreshing
+                chrome.storage.sync.get(['refreshing'], function (result) {
                     for (let data of Object.keys(result)) {
-                        nextReload = result[data];
-                        //console.log("next reload:" + nextReload)
+                        refreshValue = result[data];
                     }
 
-                    //If it's time to reload, then do it!
-                    if (parseInt(nextReload) <= 0) {
-                        //Get the ID of the tab that must be reloaded
-                        chrome.storage.sync.get(['tabid'], function (result) {
+                    reloadTime = parseInt(reloadSeconds) + (parseInt(reloadMinutes) * 60) + (parseInt(reloadHours) * 60 * 60)
+                    //If we are refreshing, do the following
+                    if (refreshValue == "1") {
+
+
+                        //Check if it's time to reload 
+
+                        chrome.storage.sync.get(['nextReload'], function (result) {
                             for (let data of Object.keys(result)) {
-                                tabId = result[data];
+                                nextReload = result[data];
+                                //console.log("next reload:" + nextReload)
                             }
 
-                            //Reload the tab we want, from memory
-                            chrome.tabs.reload(tabId);
+                            //If it's time to reload, then do it!
+                            if (parseInt(nextReload) <= 0) {
+                                //Get the ID of the tab that must be reloaded
+                                chrome.storage.sync.get(['tabid'], function (result) {
+                                    for (let data of Object.keys(result)) {
+                                        tabId = result[data];
+                                    }
 
-                            //Just prevent garbarge data from getting in
-                            if (reloadTime == -1 || reloadTime == 0) {
-                                refreshData()
-                            } else {
-                                //Go back to the start of this function, and we will wait the number of seconds before reloading again
+                                    //Reload the tab we want, from memory
+                                    chrome.tabs.reload(tabId);
+
+                                    //Just prevent garbarge data from getting in
+                                    if (reloadTime == -1 || reloadTime == 0) {
+                                        refreshData()
+                                    } else {
+                                        //Go back to the start of this function, and we will wait the number of seconds before reloading again
+                                        chrome.storage.sync.set({
+                                            "nextReload": `${reloadTime}`
+                                        }, function () {
+                                            //Restart the loop
+                                            setTimeout(refreshData, 1000);
+                                        })
+                                    }
+                                })
+                            }
+                            //It's not time to reload:
+                            else {
+                                //console.log("Not time to reload yet")
                                 chrome.storage.sync.set({
-                                    "nextReload": `${reloadTime}`
+                                    "nextReload": `${(nextReload-1)}`
                                 }, function () {
                                     //Restart the loop
                                     setTimeout(refreshData, 1000);
                                 })
                             }
                         })
-                    }
-                    //It's not time to reload:
-                    else {
-                        //console.log("Not time to reload yet")
-                        chrome.storage.sync.set({
-                            "nextReload": `${(nextReload-1)}`
-                        }, function () {
-                            //Restart the loop
-                            setTimeout(refreshData, 1000);
-                        })
-                    }
-                })
 
-            } else {
-                //Restart loop
-                //console.log("refresh reload cycle")
-                refreshData()
-            }
-        });
+                    } else {
+                        //Restart loop
+                        //console.log("refresh reload cycle")
+                        refreshData()
+                    }
+                });
+                //Begin end
+            })
+        })
     });
 }
 
