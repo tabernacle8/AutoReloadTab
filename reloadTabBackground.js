@@ -102,7 +102,6 @@ function beginReloading() {
 //Checks to see if we need to start reloading the tab
 function refreshData() {
     //console.log("refresh")
-    //console.log("listening for data")
     //Get refreshing true or false data
     chrome.storage.sync.get(['refreshing'], function (result) {
         for (let data of Object.keys(result)) {
@@ -112,7 +111,6 @@ function refreshData() {
                 beginReloading()
             } else {
                 //Do not refresh or stop refreshing!
-                //console.log("restart reload cycle!")
                 setTimeout(refreshData, 1000);
             }
 
@@ -120,5 +118,5 @@ function refreshData() {
     })
 }
 
-//Begin looping
-refreshData()
+//Wait 6 seconds and then begin looping, just to make sure everything else gets set up
+setTimeout(refreshData, 6000);

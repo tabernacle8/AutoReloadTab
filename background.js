@@ -67,4 +67,5 @@ chrome.runtime.onInstalled.addListener(function () {
         }]);
     });
     console.log("Hook with whitelist is done")
+    console.log("Everything is done! Booting up the main background script in 5 seconds...")
 });

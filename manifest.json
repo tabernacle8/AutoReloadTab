@@ -1,6 +1,6 @@
 {
   "name": "Simple Tab Reloader",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Refresh your tabs, without all those annoying features",
   "permissions": ["declarativeContent", "storage"],
   "background": {
