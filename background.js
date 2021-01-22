@@ -43,7 +43,7 @@ chrome.runtime.onInstalled.addListener(function () {
     }, function () {
         //null
     });
-    chrome.storage.sync.set({
+    chrome.storage.local.set({
         nextReload: '10'
     }, function () {
         //null

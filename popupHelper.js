@@ -4,7 +4,7 @@ function updateReloadTimer() {
     let nextReloadDisplayed = document.getElementById("nextReload");
     var nextReload = "0"
 
-    chrome.storage.sync.get(['nextReload'], function (result) {
+    chrome.storage.local.get(['nextReload'], function (result) {
         for (let data of Object.keys(result)) {
             nextReload = result[data];
         }

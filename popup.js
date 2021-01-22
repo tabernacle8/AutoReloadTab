@@ -43,7 +43,7 @@ function updateReloadTime() {
 
                 var totalReloadTime = parseInt(reloadSeconds) + (parseInt(reloadMinutes) * 60) + (parseInt(reloadHours) * 60 * 60)
 
-                chrome.storage.sync.set({
+                chrome.storage.local.set({
                     "nextReload": `${totalReloadTime}`
                 }, function () {
                     console.log("next reload set to " + totalReloadTime)

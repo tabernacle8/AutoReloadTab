@@ -44,7 +44,7 @@ function beginReloading() {
 
                         //Check if it's time to reload 
 
-                        chrome.storage.sync.get(['nextReload'], function (result) {
+                        chrome.storage.local.get(['nextReload'], function (result) {
                             for (let data of Object.keys(result)) {
                                 nextReload = result[data];
                                 //console.log("next reload:" + nextReload)
@@ -66,7 +66,7 @@ function beginReloading() {
                                         refreshData()
                                     } else {
                                         //Go back to the start of this function, and we will wait the number of seconds before reloading again
-                                        chrome.storage.sync.set({
+                                        chrome.storage.local.set({
                                             "nextReload": `${reloadTime}`
                                         }, function () {
                                             //Restart the loop
@@ -78,7 +78,7 @@ function beginReloading() {
                             //It's not time to reload:
                             else {
                                 //console.log("Not time to reload yet")
-                                chrome.storage.sync.set({
+                                chrome.storage.local.set({
                                     "nextReload": `${(nextReload-1)}`
                                 }, function () {
                                     //Restart the loop
