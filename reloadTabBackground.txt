@@ -7,7 +7,38 @@ https://github.com/tabernacle8/AutoReloadTab
 
 */
 
+/*
+=================================================================
+                        This is a depreciated file!
+                        It is no longer in use!
+=================================================================
+*/
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
 function beginReloading() {
     var reloadTime = 0
     var refreshValue = "0"
@@ -120,3 +151,4 @@ function refreshData() {
 
 //Wait 6 seconds and then begin looping, just to make sure everything else gets set up
 setTimeout(refreshData, 6000);
+*/

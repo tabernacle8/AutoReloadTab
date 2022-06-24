@@ -7,8 +7,7 @@ https://github.com/tabernacle8/AutoReloadTab
 
 */
 
-//Get functions that will handle background work (Such as reloading the tabs)
-//import { beginReloading } from 'reloadTabBackground.js';
+
 
 //Init some button values
 let startReload = document.getElementById('startReload');
@@ -47,7 +46,6 @@ function updateReloadTime() {
                     "nextReload": `${totalReloadTime}`
                 }, function () {
                     console.log("next reload set to " + totalReloadTime)
-                    //do nothing
                 })
             })
         })
@@ -96,7 +94,7 @@ userTimeHours.addEventListener("change", function (data) {
 //Executes when user clicks "stop"
 stopReload.onclick = function (element) {
 
-    
+
     //Sets "refreshing" to 0, telling us to stop the refresh cycle
     chrome.storage.sync.set({
         "refreshing": "0"
@@ -108,22 +106,60 @@ stopReload.onclick = function (element) {
 //Executes when user clicks "start"
 startReload.onclick = function (element) {
     var reloadTabID = ""
+    var nextReload = 0;
 
-    //Set "refreshing" to 1 which starts the refresh cycle
-    chrome.storage.sync.set({
-        "refreshing": "1"
-    }, function () {
-        console.log('Reloading set to 1');
+    chrome.storage.local.get(['nextReload'], function (result) {
+        for (let data of Object.keys(result)) {
+            nextReload = result[data];
 
-        //Get the current tab and store its id
-        chrome.tabs.getSelected(null, function (tab) {
-            reloadTabID = tab.id
-            chrome.storage.sync.set({
-                "tabid": reloadTabID
-            }, function () {
-                console.log('TabID cached as' + reloadTabID);
+        }
 
-                //We are done! reloadTabBackground.js will handle the rest
+        //Set "refreshing" to 1 which starts the refresh cycle
+        chrome.storage.sync.set({
+            "refreshing": "1"
+        }, function () {
+            console.log('Reloading set to 1');
+
+            //Get the current tab and store its id
+            chrome.tabs.query({
+                currentWindow: true,
+                active: true
+            }, function (tabs) {
+                reloadTabID = tabs[0].id
+                chrome.storage.sync.set({
+                    "tabid": reloadTabID
+                }, function () {
+                    console.log('TabID cached as' + reloadTabID);
+
+                    //Get current time in second form
+                    var currentTime = new Date().getTime() / 1000
+                    //Calculate the time until the next reload
+                    var globalNextReload = currentTime + parseInt(nextReload)
+
+                    //Push globalNextReload into storage
+                        console.log('Next reload set to ' + globalNextReload);
+                        console.log("Current time is " + currentTime)
+
+                        //Set the next reload time
+                        chrome.storage.sync.set({
+                            "experimentalGlobalTime": `${globalNextReload}`
+                        }, function () {
+
+                            //Read experimentalGlobalTime back from storage
+                            chrome.storage.sync.get(['experimentalGlobalTime'], function (result) {
+                                for (let data of Object.keys(result)) {
+                                    console.log("Experimental global time is " + result[data])
+                                }
+                            }
+                            )
+                        });
+
+                        //This is a hacky workaround for manifest V3. This api change sucks
+                        chrome.alarms.create("reload", {
+                            delayInMinutes: nextReload / 60
+                        })
+                    });
+
             });
         });
     });
