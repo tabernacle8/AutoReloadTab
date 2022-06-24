@@ -1,9 +1,9 @@
 # AutoReloadTab
 
-## This extension was significantly altered by the Manifest V3 update that Chrome is forcing on developers. I'm sorry that functionality is impaired but I don't currently know enough about Chrome API to make anything without the limitation. Please, submit a push request if you have ideas or workarounds.
+## This extension was significantly altered by the Manifest V3 update that Chrome is forcing on developers. I'm sorry that functionality is impaired but I don't currently know enough about Chrome API to make anything without the limitation. Please, submit a pull request if you have ideas or workarounds.
 
 It's a chrome extension that reloads the tab.... thats it. Now manifest V3 compliant (With some changes sigh)
-Always open for push requests, always open to feedback.
+Always open for pull requests, always open to feedback.
 
 
 
