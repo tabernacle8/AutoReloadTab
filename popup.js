@@ -148,10 +148,7 @@ startReload.onclick = function (element) {
                                     for (let data of Object.keys(result)) {
                                         refreshing = result[data];
                                     }
-                                    if (nextReload < 60 || refreshing == "-11") {
-                                        console.log(
-                                            "Reload time is less than 60 seconds, stopping"
-                                        );
+                                    if (refreshing == "-11") {
                                         chrome.storage.sync.set({
                                                 refreshing: "-11",
                                             },
@@ -179,7 +176,7 @@ startReload.onclick = function (element) {
                                                 function (result) {
                                                     for (let data of Object.keys(result)) {
                                                         console.log(
-                                                            "Experimental global time is " + result[data]
+                                                            "Experimental global time is " + result[data]+" Time from now: "+(result[data]-currentTime)+" seconds"
                                                         );
                                                     }
                                                 }
@@ -187,10 +184,10 @@ startReload.onclick = function (element) {
                                         }
                                     );
 
-                                    //This is a hacky workaround for manifest V3. This api change sucks
-                                    chrome.alarms.create("reload", {
-                                        delayInMinutes: nextReload / 60,
-                                    });
+                                    //Call restartAlarm function from background.js
+                                    chrome.runtime.sendMessage({command: "restartAlarm"}, function(response) {
+                                        console.log(response.message);
+                                      });
                                 });
                             }
                         );

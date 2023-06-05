@@ -136,39 +136,103 @@ chrome.alarms.onAlarm.addListener(function (alarm) {
     }
 });
 
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+    if (request.command === "restartAlarm") {
+      // Call your restartAlarm function here.
+      restartAlarm();
+      sendResponse({message: "Alarm restarted!"});
+    }
+  });
+
+  
+let reloadInterval;
+
 function restartAlarm() {
     console.log("Restarting alarm");
-    var reloadTabID = "";
-    var nextReload = 0;
+
+    // Cancel any existing interval
+    if (reloadInterval) {
+        //clearInterval(reloadInterval);
+        reloadInterval = null;
+    }
+
+    chrome.alarms.clear("reload");
 
     chrome.storage.local.get(["nextReload"], function (result) {
         for (let data of Object.keys(result)) {
-            nextReload = result[data];
-        }
+            const nextReload = parseInt(result[data]);
 
-        //Get current time in second form
-        var currentTime = new Date().getTime() / 1000;
-        //Calculate the time until the next reload
-        var globalNextReload = currentTime + parseInt(nextReload);
-
-        //Set the next reload time
-        chrome.storage.sync.set({
-                experimentalGlobalTime: `${globalNextReload}`,
-            },
-            function () {
-                //Read experimentalGlobalTime back from storage
-                chrome.storage.sync.get(["experimentalGlobalTime"], function (result) {
-                    for (let data of Object.keys(result)) {
-                        console.log("Experimental global time is " + result[data]);
-                    }
-                });
+            // Ensure nextReload is a positive integer
+            if (!Number.isInteger(nextReload) || nextReload <= 0) {
+                console.error(`Invalid nextReload value: ${nextReload}`);
+                return;
             }
-        );
-        //If nextReload / 60 <1, then don't fire the alarm
-        if (nextReload / 60 >= 1) {
-            chrome.alarms.create("reload", {
-                delayInMinutes: nextReload / 60,
-            });
+
+            // Decide whether to use setInterval or alarms based on the reload interval
+            if (nextReload < 60) {
+                // Schedule the next reload with setInterval
+                reloadInterval = setInterval(function() {
+                    // Before reloading, check if 'refreshing' is still 1
+
+                    //Get tab id from storage
+                    chrome.storage.sync.get(["tabid"], function (result) {
+                        for (let data of Object.keys(result)) {
+                            tabId = result[data];
+                        }
+                        chrome.storage.sync.get(["refreshing"], function (result) {
+                            if (result.refreshing == 1) {
+                                console.log("Reloading from setInterval");
+                                chrome.tabs.reload(tabId);
+                                updateGlobalTime(nextReload);
+                            } else {
+                                console.log("Refreshing is not enabled. Stopping reloads.");
+                                //clearInterval(reloadInterval);
+                                reloadInterval = null;
+                            }
+                        });
+                    });
+                }, nextReload * 1000); // Convert to milliseconds
+            } else {
+                //Get tab id from storage and reload
+                chrome.storage.sync.get(["tabid"], function (result) {
+                    for (let data of Object.keys(result)) {
+                        tabId = result[data];
+                    }
+                    chrome.storage.sync.get(["refreshing"], function (result) {
+                        if (result.refreshing == 1) {
+                            console.log("Reloading from alarms");
+                            chrome.tabs.reload(tabId);
+                            updateGlobalTime(nextReload);
+                        } else {
+                            console.log("Refreshing is not enabled. Stopping reloads.");
+                            //clearInterval(reloadInterval);
+                            reloadInterval = null;
+                        }
+                    });
+                });
+                // Schedule the next reload with alarms
+                chrome.alarms.create("reload", {
+                    delayInMinutes: nextReload / 60,
+                });
+                updateGlobalTime(nextReload);
+            }
         }
     });
 }
+
+// Function to update experimentalGlobalTime
+function updateGlobalTime(nextReload) {
+    // Get current time in second form
+    var currentTime = new Date().getTime() / 1000;
+    // Calculate the time until the next reload
+    var globalNextReload = currentTime + nextReload;
+
+    // Update the experimentalGlobalTime
+    chrome.storage.sync.set({
+        experimentalGlobalTime: `${globalNextReload}`,
+    }, function () {
+        console.log("Updated experimental global time to " + globalNextReload);
+    });
+}
+
+
