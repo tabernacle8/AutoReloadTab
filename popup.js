@@ -14,6 +14,63 @@ let userTimeSeconds = document.getElementById("reloadTimer");
 let userTimeMinutes = document.getElementById("reloadTimer2");
 let userTimeHours = document.getElementById("reloadTimer3");
 
+document.addEventListener('DOMContentLoaded', function() {
+    chrome.storage.local.get('rememberScrollPosition', function(data) {
+        var checkbox = document.getElementById('rememberScrollPosition');
+        checkbox.checked = data.rememberScrollPosition;
+    });
+});
+
+
+document.getElementById('rememberScrollPosition').addEventListener('change', function() {
+    console.log("Remember scroll position changed")
+    if (this.checked) {
+        chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+
+            if (!tabs[0] || !tabs[0].url || tabs[0].url.startsWith('chrome://')) {
+                // Handle cases where there is no active tab or the URL is not a valid URL
+                console.log("No valid URL available for the active tab");
+                //Uncheck the checkbox
+                document.getElementById('rememberScrollPosition').checked = false;
+                return;
+            }
+            var url = new URL(tabs[0].url);
+            var origin = url.origin + "/*";
+            
+            chrome.permissions.request({
+                permissions: ['scripting'],
+                origins: [origin]
+            }, function(granted) {
+                if (granted) {
+                    console.log("Permission granted!")
+                    chrome.runtime.sendMessage({rememberScrollPosition: true});
+                } else {
+                    console.log("Permission rejected!")
+                    //Update UI to show that the permission was denied
+                    document.getElementById('rememberScrollPosition').checked = false;
+                }
+            });
+        });
+    } else {
+        chrome.runtime.sendMessage({rememberScrollPosition: false});
+        //Remove permissions
+        var origin = url.origin + "/*";
+        chrome.permissions.remove({
+            permissions: ['activeTab', 'scripting'],
+            origins: [origin]
+        }, function(removed) {
+            if (removed) {
+                console.log("Permission removed!")
+            } else {
+                console.log("Permission not removed!")
+            }
+        }
+        );
+    }
+});
+
+
+
 //Init function, first ran when the script boots
 console.log("Oh hey there. I'm ready to reload some tabs!");
 

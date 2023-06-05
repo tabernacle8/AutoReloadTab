@@ -2,7 +2,13 @@
   "name": "Simple Tab Reloader",
   "version": "3.1.0",
   "description": "Refresh your tabs, without all those annoying features",
-  "permissions": ["declarativeContent", "storage", "alarms"],
+  "permissions": ["declarativeContent", "storage", "alarms", "activeTab"],
+  "optional_permissions": ["scripting"],
+  "optional_host_permissions": ["http://*/*", "https://*/*"],
+  "web_accessible_resources": [{
+    "resources": ["scrollPosition.js"],
+    "matches": ["http://*/*", "https://*/*"]
+  }],
   "background": {
     "service_worker": "background.js"
   },

@@ -182,7 +182,18 @@ function restartAlarm() {
                         chrome.storage.sync.get(["refreshing"], function (result) {
                             if (result.refreshing == 1) {
                                 console.log("Reloading from setInterval");
-                                chrome.tabs.reload(tabId);
+                                chrome.storage.local.get('rememberScrollPosition', function(data) {
+                                    if (data.rememberScrollPosition) {
+                                        chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+                                            let tab = tabs[0];
+                                            chrome.scripting.executeScript({
+                                                target: {tabId: tabId},
+                                                files: ['scrollPosition.js']
+                                            });
+                                        });
+                                    }
+                                    chrome.tabs.reload(tabId);
+                                });
                                 updateGlobalTime(nextReload);
                             } else {
                                 console.log("Refreshing is not enabled. Stopping reloads.");
@@ -201,7 +212,18 @@ function restartAlarm() {
                     chrome.storage.sync.get(["refreshing"], function (result) {
                         if (result.refreshing == 1) {
                             console.log("Reloading from alarms");
-                            chrome.tabs.reload(tabId);
+                            chrome.storage.local.get('rememberScrollPosition', function(data) {
+                                if (data.rememberScrollPosition) {
+                                    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+                                        let tab = tabs[0];
+                                        chrome.scripting.executeScript({
+                                            target: {tabId: tabId},
+                                            files: ['scrollPosition.js']
+                                        });
+                                    });
+                                }
+                                chrome.tabs.reload(tabId);
+                            });
                             updateGlobalTime(nextReload);
                         } else {
                             console.log("Refreshing is not enabled. Stopping reloads.");
@@ -234,5 +256,15 @@ function updateGlobalTime(nextReload) {
         console.log("Updated experimental global time to " + globalNextReload);
     });
 }
+
+
+
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+    if (request.rememberScrollPosition !== undefined) {
+        chrome.storage.local.set({rememberScrollPosition: request.rememberScrollPosition});
+    }
+});
+
+
 
 
