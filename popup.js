@@ -105,6 +105,10 @@ stopReload.onclick = function (element) {
             console.log("Reloading set to 0");
         }
     );
+
+    //Delete all chrome alarms and setInterval calls
+    chrome.alarms.clearAll();
+    clearInterval();
 };
 
 //Executes when user clicks "start"
