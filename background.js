@@ -152,11 +152,13 @@ function restartAlarm() {
 
     // Cancel any existing interval
     if (reloadInterval) {
-        //clearInterval(reloadInterval);
+        clearInterval(reloadInterval);
         reloadInterval = null;
     }
 
-    chrome.alarms.clear("reload");
+    chrome.alarms.clearAll(function() {
+        console.log("All previous alarms cleared");
+    });
 
     chrome.storage.local.get(["nextReload"], function (result) {
         for (let data of Object.keys(result)) {
