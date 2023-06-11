@@ -188,7 +188,7 @@ function restartAlarm() {
                                 updateGlobalTime(nextReload);
                             } else {
                                 console.log("Refreshing is not enabled. Stopping reloads.");
-                                //clearInterval(reloadInterval);
+                                clearInterval(reloadInterval);
                                 reloadInterval = null;
                             }
                         });
@@ -207,7 +207,7 @@ function restartAlarm() {
                             updateGlobalTime(nextReload);
                         } else {
                             console.log("Refreshing is not enabled. Stopping reloads.");
-                            //clearInterval(reloadInterval);
+                            clearInterval(reloadInterval);
                             reloadInterval = null;
                         }
                     });
